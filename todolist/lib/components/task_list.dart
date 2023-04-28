@@ -57,7 +57,7 @@ class TaskList extends StatelessWidget {
                               tasks: tasks,
                               tsk: tsk,
                           )
-                          : SizedBox();
+                          : const SizedBox();
                     }),
               ),
             ),

@@ -86,13 +86,28 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final List<Task> tasks = [
+    // espaço para o header
     Task(
-      nome: 'espaço para o título',
+      nome: '',
       id: '',
       desc: '',
       expirationDate: DateTime.now(),
     ),
   ];
+
+    final List<Task> doneTasks = [
+      // espaço para o header
+      Task(
+          nome: '',
+          desc: '',
+          id: Random().toString(),
+          expirationDate: DateTime.now()),
+    ];
+
+    final List<Task> apenasTitulo = [
+      Task(nome: '', desc: '', id: '', expirationDate: DateTime.now()),
+    ];
+    
   _addTask(String nome, String desc, DateTime data) {
     final newTask = Task(
       nome: nome,
@@ -106,29 +121,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  _setTaskAsDone(String id) {
+    setState(() {
+      
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<Task> doneTasks = [
-      Task(
-          nome: 'Teste 1',
-          desc: 'Teste 1',
-          id: Random().toString(),
-          expirationDate: DateTime.now()),
-      Task(
-          nome: 'Teste 2',
-          desc: 'Teste 2',
-          id: Random().toString(),
-          expirationDate: DateTime.now()),
-      Task(
-          nome: 'Teste 3',
-          desc: 'Teste 3',
-          id: Random().toString(),
-          expirationDate: DateTime.now())
-    ];
-
-    final List<Task> apenasTitulo = [
-      Task(nome: '', desc: '', id: '', expirationDate: DateTime.now()),
-    ];
 
     return Scaffold(
       appBar: CupertinoNavigationBar(

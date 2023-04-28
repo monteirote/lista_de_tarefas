@@ -30,24 +30,71 @@ class TaskCard extends StatelessWidget {
                 : Radius.zero,
           )),
       child: Card(
-          margin: const EdgeInsets.fromLTRB(10, 5, 10, 7.5),
-          child: ListTile(
-            tileColor: const Color.fromARGB(255, 174, 224, 244),
-            title: Text(
-              tsk.nome,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+        margin: const EdgeInsets.fromLTRB(10, 5, 10, 7.5),
+        child: ListTile(
+          horizontalTitleGap: 130,
+          contentPadding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          tileColor: const Color.fromARGB(255, 174, 224, 244),
+          title: Text(
+            textAlign: TextAlign.left,
+            tsk.nome,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18
             ),
-            subtitle: Column(children: [
-              Text(tsk.desc),
+          ),
+          subtitle: Column(            
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                  'Realizar até ${DateFormat('dd MMM y').format(tsk.expirationDate)}')
-            ]),
-            trailing: const Icon(
-              Icons.three_k_sharp,
-            ),
-          )),
+                tsk.desc,
+                style: const TextStyle(
+                  fontSize: 13,
+                ),
+              ),
+              Text(
+                  'Realizar até ${DateFormat('dd MMM y').format(tsk.expirationDate)} às ${DateFormat('hh:mm').format(tsk.expirationDate)}',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: tsk.expirationDate.isBefore(DateTime.now()) ?  Colors.red : const Color.fromARGB(0, 78, 71, 71)
+                  ),  
+                ),
+            ],
+          ),
+          trailing: PopupMenuButton<int>(
+            padding: const EdgeInsets.only(right: 10),
+            icon: const Icon(Icons.done_outline_rounded),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 1,
+                child: Row(
+                  children: [
+                    Column(
+                      children: [
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            'Marcar como Concluída',
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text(
+                            'Cancelar',
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
     ;
   }
