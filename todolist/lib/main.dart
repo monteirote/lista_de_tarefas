@@ -92,18 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
       desc: '',
       expirationDate: DateTime.now(),
     ),
-    Task(
-      nome: 'Regar Plantas',
-      id: Random().toString(),
-      desc: 'Regar todas as plantas do jardim',
-      expirationDate: DateTime.now(),
-    ),
-    Task(
-      nome: 'Estudar para Prova',
-      id: Random().toString(),
-      desc: 'Estudar para a prova de desenvolvimento de algorit.',
-      expirationDate: DateTime.now(),
-    ),
   ];
   _addTask(String nome, String desc, DateTime data) {
     final newTask = Task(
