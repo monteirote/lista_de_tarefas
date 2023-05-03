@@ -9,13 +9,15 @@ class TaskList extends StatelessWidget {
   final String titulo;
   final void Function() abrirFecharLista;
   final bool listaEstaAberta;
+  Function(Task) markAsDone;
 
-  const TaskList({
+  TaskList({
     super.key,
     required this.listaEstaAberta,
     required this.tasks,
     required this.titulo,
     required this.abrirFecharLista,
+    required this.markAsDone,
   });
 
   @override
@@ -53,6 +55,7 @@ class TaskList extends StatelessWidget {
                             )
                           : listaEstaAberta 
                           ? TaskCard(
+                              markAsDone: markAsDone,
                               index: index,
                               tasks: tasks,
                               tsk: tsk,

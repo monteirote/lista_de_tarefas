@@ -51,14 +51,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   bool listaConcluidasEstaAberta = false;
-  bool listaARealizarEstaAberta = true;
+  bool listaARealizarEstaAberta = false;
   bool modoEdicao = false;
 
   void _entrarModoEdicao() {
     setState(() {
       modoEdicao = true;
     });
+  }
 
+  void _sairModoEdicao() {
+    setState(() {
+      modoEdicao = false;
+    });
   }
 
   void _expandirListaConcluidas() {
@@ -91,25 +96,33 @@ class _MyHomePageState extends State<MyHomePage> {
       nome: '',
       id: '',
       desc: '',
+      concluida: false,
       expirationDate: DateTime.now(),
     ),
   ];
 
-    final List<Task> doneTasks = [
-      // espaço para o header
-      Task(
-          nome: '',
-          desc: '',
-          id: Random().toString(),
-          expirationDate: DateTime.now()),
-    ];
+  final List<Task> doneTasks = [
+    // espaço para o header
+    Task(
+        nome: '',
+        concluida: true,
+        desc: '',
+        id: Random().toString(),
+        expirationDate: DateTime.now()),
+  ];
 
-    final List<Task> apenasTitulo = [
-      Task(nome: '', desc: '', id: '', expirationDate: DateTime.now()),
-    ];
-    
+  final List<Task> apenasTitulo = [
+    Task(
+        nome: '',
+        desc: '',
+        id: '',
+        expirationDate: DateTime.now(),
+        concluida: false),
+  ];
+
   _addTask(String nome, String desc, DateTime data) {
     final newTask = Task(
+      concluida: false,
       nome: nome,
       desc: desc,
       expirationDate: data,
@@ -121,15 +134,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  _setTaskAsDone(String id) {
+  _setTaskAsDone(Task task) {
     setState(() {
-      
+      task.expirationDate = DateTime.now();
+      task.concluida = true;
+      tasks.remove(task);
+      doneTasks.add(task);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: CupertinoNavigationBar(
         padding: const EdgeInsetsDirectional.only(
@@ -141,26 +156,45 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-              child: Text(
-                titles[_selectedIndex],
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 23,
-                ),
-              ),
-            ),
-            _selectedIndex == 0
-                ? TextButton(
-                    onPressed: _entrarModoEdicao,
-                    child: Text(
-                      'Editar',
-                      style: TextStyle(
+                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                child: modoEdicao == false
+                    ? Text(
+                        titles[_selectedIndex],
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 23,
+                        ),
+                      )
+                    : IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.delete),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                  )
+                      )),
+            _selectedIndex == 0
+                ? modoEdicao == false
+                    ? TextButton(
+                        onPressed: _entrarModoEdicao,
+                        child: Text(
+                          'Editar',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      )
+                    : Container(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: TextButton(
+                          onPressed: _sairModoEdicao,
+                          child: Text(
+                            'Concluído',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                        ),
+                    )
                 : const SizedBox(),
           ],
         ),
@@ -171,12 +205,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TaskList(
+                    markAsDone: _setTaskAsDone,
                     listaEstaAberta: listaARealizarEstaAberta,
                     abrirFecharLista: _expandirListaARealizar,
                     tasks: tasks.isEmpty ? apenasTitulo : tasks,
                     titulo: 'Tarefas a Realizar',
                   ),
                   TaskList(
+                    markAsDone: _setTaskAsDone,
                     listaEstaAberta: listaConcluidasEstaAberta,
                     abrirFecharLista: _expandirListaConcluidas,
                     tasks: doneTasks.isEmpty ? apenasTitulo : doneTasks,

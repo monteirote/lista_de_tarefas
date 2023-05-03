@@ -6,15 +6,17 @@ import 'package:intl/intl.dart';
 import '../models/task.dart';
 
 class TaskCard extends StatelessWidget {
-  const TaskCard({
+  TaskCard({
     required this.index,
     required this.tasks,
     required this.tsk,
+    required this.markAsDone,
   });
 
   final int index;
   final List<Task> tasks;
   final Task tsk;
+  Function(Task) markAsDone;
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +58,12 @@ class TaskCard extends StatelessWidget {
                 ),
               ),
               Text(
-                  'Realizar até ${DateFormat('dd MMM y').format(tsk.expirationDate)} às ${DateFormat('hh:mm').format(tsk.expirationDate)}',
+                  tsk.concluida == false
+                  ? 'Realizar até ${DateFormat('dd MMM y').format(tsk.expirationDate)} às ${DateFormat('hh:mm').format(tsk.expirationDate)}'
+                  : 'Concluída em ${DateFormat('dd MMM y').format(tsk.expirationDate)}',
                   style: TextStyle(
                     fontSize: 11,
-                    color: tsk.expirationDate.isBefore(DateTime.now()) ?  Colors.red : const Color.fromARGB(0, 78, 71, 71)
+                    color: tsk.expirationDate.isBefore(DateTime.now()) && tsk.concluida == false ?  Colors.red : Colors.grey,
                   ),  
                 ),
             ],
@@ -75,7 +79,10 @@ class TaskCard extends StatelessWidget {
                     Column(
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () => {
+                            markAsDone(tsk),
+                            Navigator.of(context).pop()
+                          },
                           child: const Text(
                             'Marcar como Concluída',
                           ),
