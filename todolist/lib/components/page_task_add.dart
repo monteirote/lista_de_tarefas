@@ -69,7 +69,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
             textAlignVertical: TextAlignVertical.top,
             placeholder: 'Descrição',
             controller: _descController,
-            onSubmitted: (_) => _submitForm,
+            onSubmitted: (_) => {
+              _submitForm,
+              _descController.clear(),
+              _titleController.clear(),
+            },
           ),
           const SizedBox(
             height: 20,

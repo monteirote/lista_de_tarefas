@@ -90,6 +90,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void selecionarTask(bool? value) {
+    setState(() {
+      
+    });
+  }
+
   final List<Task> tasks = [
     // espaço para o header
     Task(
@@ -120,6 +126,21 @@ class _MyHomePageState extends State<MyHomePage> {
         concluida: false),
   ];
 
+  _checkIfListsAreEmpty() {
+    setState(() {
+      if (tasks.isEmpty) {
+        listaARealizarEstaAberta = false;
+      } else {
+        listaARealizarEstaAberta = true;
+      }
+      if (doneTasks.isEmpty) {
+        listaConcluidasEstaAberta = false;
+      } else {
+        listaConcluidasEstaAberta = true;
+      }
+    });
+  }
+
   _addTask(String nome, String desc, DateTime data) {
     final newTask = Task(
       concluida: false,
@@ -140,6 +161,16 @@ class _MyHomePageState extends State<MyHomePage> {
       task.concluida = true;
       tasks.remove(task);
       doneTasks.add(task);
+      _checkIfListsAreEmpty();
+    });
+  }
+
+  _apagarTask(Task tsk, List lista) {
+    setState(() {
+      lista.remove(tsk);
+      _checkIfListsAreEmpty();
+      Navigator.of(context).pop();
+      initState();
     });
   }
 
@@ -156,22 +187,23 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                child: modoEdicao == false
-                    ? Text(
-                        titles[_selectedIndex],
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 23,
-                        ),
-                      )
-                    : IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.delete),
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: modoEdicao == false
+                  ? Text(
+                      titles[_selectedIndex],
+                      style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
-                      )),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 23,
+                      ),
+                    )
+                  : IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.delete),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+            ),
             _selectedIndex == 0
                 ? modoEdicao == false
                     ? TextButton(
@@ -184,8 +216,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       )
                     : Container(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: TextButton(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: TextButton(
                           onPressed: _sairModoEdicao,
                           child: Text(
                             'Concluído',
@@ -194,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                         ),
-                    )
+                      )
                 : const SizedBox(),
           ],
         ),
@@ -205,6 +237,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TaskList(
+                    selecionarTask: selecionarTask,
+                    modoEdicao: modoEdicao,
+                    deleteTask: _apagarTask,
                     markAsDone: _setTaskAsDone,
                     listaEstaAberta: listaARealizarEstaAberta,
                     abrirFecharLista: _expandirListaARealizar,
@@ -212,12 +247,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     titulo: 'Tarefas a Realizar',
                   ),
                   TaskList(
+                    selecionarTask: selecionarTask,
+                    modoEdicao: modoEdicao,
+                    deleteTask: _apagarTask,
                     markAsDone: _setTaskAsDone,
                     listaEstaAberta: listaConcluidasEstaAberta,
                     abrirFecharLista: _expandirListaConcluidas,
                     tasks: doneTasks.isEmpty ? apenasTitulo : doneTasks,
                     titulo: 'Tarefas Concluídas',
-                  )
+                  ),
                 ],
               )
             : _selectedIndex == 1

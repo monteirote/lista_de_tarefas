@@ -7,16 +7,24 @@ import '../models/task.dart';
 
 class TaskCard extends StatelessWidget {
   TaskCard({
+    required this.deleteTask,
     required this.index,
     required this.tasks,
     required this.tsk,
     required this.markAsDone,
+    required this.modoEdicao,
+    required this.selecionarTask,
+    required this.check,
   });
 
   final int index;
   final List<Task> tasks;
   final Task tsk;
   Function(Task) markAsDone;
+  Function(Task, List) deleteTask;
+  void Function(bool?) selecionarTask;
+  bool modoEdicao;
+  bool check;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +76,17 @@ class TaskCard extends StatelessWidget {
                 ),
             ],
           ),
-          trailing: PopupMenuButton<int>(
+          trailing: 
+          modoEdicao == true
+          ? Checkbox(
+            value: check,
+            onChanged: selecionarTask,
+            checkColor: Theme.of(context).primaryColor,
+          )
+
+          
+          : tsk.concluida == false
+            ? PopupMenuButton<int>(
             padding: const EdgeInsets.only(right: 10),
             icon: const Icon(Icons.done_outline_rounded),
             itemBuilder: (context) => [
@@ -99,10 +117,42 @@ class TaskCard extends StatelessWidget {
                 ),
               ),
             ],
-          ),
+          )
+          : PopupMenuButton<int>(
+            padding: const EdgeInsets.only(right: 10),
+            icon: const Icon(Icons.delete),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 1,
+                child: Row(
+                  children: [
+                    Column(
+                      children: [
+                        TextButton(
+                          onPressed: () => {
+                            deleteTask(tsk, tasks),
+                            Navigator.of(context).pop()
+                          },
+                          child: const Text(
+                            'Excluir Tarefa',
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text(
+                            'Cancelar',
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          )
         ),
       ),
     );
-    ;
+    
   }
 }

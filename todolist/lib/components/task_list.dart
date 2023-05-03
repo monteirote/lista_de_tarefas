@@ -10,9 +10,15 @@ class TaskList extends StatelessWidget {
   final void Function() abrirFecharLista;
   final bool listaEstaAberta;
   Function(Task) markAsDone;
+  Function(Task, List) deleteTask;
+  bool modoEdicao;
+  Function(bool?) selecionarTask;
 
   TaskList({
     super.key,
+    required this.selecionarTask,
+    required this.modoEdicao,
+    required this.deleteTask,
     required this.listaEstaAberta,
     required this.tasks,
     required this.titulo,
@@ -55,6 +61,10 @@ class TaskList extends StatelessWidget {
                             )
                           : listaEstaAberta 
                           ? TaskCard(
+                              selecionarTask: selecionarTask,
+                              check: true,
+                              modoEdicao: modoEdicao,
+                              deleteTask: deleteTask,
                               markAsDone: markAsDone,
                               index: index,
                               tasks: tasks,
