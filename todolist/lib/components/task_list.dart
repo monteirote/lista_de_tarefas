@@ -48,7 +48,7 @@ class TaskList extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: SizedBox(
-                height: 500,
+                height: 300,
                 child: ListView.builder(
                     itemCount: tasks.length,
                     itemBuilder: (ctx, index) {

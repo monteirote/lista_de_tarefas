@@ -29,6 +29,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
 
     widget.onSubmit(title, desc, _selectedDate);
+    _titleController.clear();
+    _descController.clear();
 
   }
 
@@ -71,8 +73,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
             controller: _descController,
             onSubmitted: (_) => {
               _submitForm,
-              _descController.clear(),
-              _titleController.clear(),
             },
           ),
           const SizedBox(
